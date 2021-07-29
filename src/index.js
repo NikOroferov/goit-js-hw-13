@@ -5,9 +5,8 @@ import cardMarkup from './templates/cardsMarkup.hbs';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 
-const searchForm = document.querySelector('.search-form');
-const imageGallery = document.querySelector('.gallery');
-const searchBtn = document.querySelector('.searchBtn');
+const formEl = document.querySelector('.search-form');
+const galleryEl = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
 var lightbox = new SimpleLightbox('.gallery a');
@@ -15,7 +14,7 @@ var lightbox = new SimpleLightbox('.gallery a');
 const newApiService = new NewApiService();
 console.log(newApiService);
 
-searchForm.addEventListener('submit', onSearch);
+formEl.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onLoad);
 
 loadMoreBtn.classList.add('is-hidden');
@@ -28,7 +27,8 @@ async function onSearch(event) {
 		const result = await newApiService.fetchArticles();
 		if (newApiService.query === '' || result.hits.length === 0) {
 			clearGallery();
-			Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');			
+			loadMoreBtn.classList.add('is-hidden');
+			Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
 		}
 		else if (result.hits.length !== 0) {
 			clearGallery();
@@ -48,7 +48,7 @@ async function onLoad() {
 	try {
 		const result = await newApiService.fetchArticles();
 		appendCardsMarkup(result.hits);
-		const hitsLength = imageGallery.querySelectorAll('.photo-card').length;
+		const hitsLength = galleryEl.querySelectorAll('.photo-card').length;
 
 		if (hitsLength >= result.totalHits) {
 			Notiflix.Notify.failure("We are sorry, but you have reached the end of search results.");
@@ -63,9 +63,9 @@ async function onLoad() {
 
 
 function clearGallery () {
-    imageGallery.innerHTML = '';
+    galleryEl.innerHTML = '';
 }
 
 function appendCardsMarkup(data){
- imageGallery.insertAdjacentHTML('beforeend', cardMarkup(data));
+ galleryEl.insertAdjacentHTML('beforeend', cardMarkup(data));
 };

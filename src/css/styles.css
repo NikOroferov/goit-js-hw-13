@@ -33,6 +33,10 @@
   border-radius: 5px;
 }
 
+.searchBtn:hover {
+  cursor: pointer;
+}
+
 .load-more {
   display: block;
   margin-left: auto;
